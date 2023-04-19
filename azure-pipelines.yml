@@ -1,25 +1,17 @@
-
-trigger:
-- main
-
-pool:
-  vmImage: 'windows-latest'
-
 variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'restore'
-    feedsToUse: 'select'
-    vstsFeed: 'cf2ad170-e11d-420b-aeec-c6c93a2c4019'
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(buildConfiguration)'
-  displayName: 'dotnet build $(buildConfiguration)
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
     publishWebProjects: true
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'Azure Pass - Sponsorship (8aa2cc15-1b23-4f6a-916c-fd3a56f63652)'
+    appType: 'webApp'
+    appName: 'demoappaz40038'
+    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
